@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_share/flutter_share.dart';
 import 'package:pretty_gauge/pretty_gauge.dart';
 
 class ResultPage extends StatelessWidget {
@@ -7,6 +8,7 @@ class ResultPage extends StatelessWidget {
   String? bmiStatus;
   String? bmiInterpretation;
   Color? bmiStatusColor;
+
   ResultPage({super.key, required this.bmiScore, required this.age});
 
   @override
@@ -59,6 +61,39 @@ class ResultPage extends StatelessWidget {
               Text(
                 bmiStatus!,
                 style: TextStyle(fontSize: 20, color: bmiStatusColor!),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                bmiInterpretation!,
+                style: TextStyle(fontSize: 15),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text("Re-Calculate")),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      await FlutterShare.share(
+                        title: 'BMI Score',
+                        text:
+                            "Your BMI Score is ${bmiScore.toStringAsFixed(1)} at Age $age. Status: $bmiStatus. Interpretation: $bmiInterpretation",
+                      );
+                    },
+                    child: Text("Share"),
+                  )
+                ],
               )
             ],
           ),
@@ -78,7 +113,7 @@ class ResultPage extends StatelessWidget {
       bmiStatusColor = Colors.orange;
     } else if (bmiScore >= 18.5) {
       bmiStatus = "Normal";
-      bmiInterpretation = "Enjoy , You Are Fit";
+      bmiInterpretation = "Enjoy, You Are Fit";
       bmiStatusColor = Colors.green;
     } else if (bmiScore < 18.5) {
       bmiStatus = "Under Weight";
