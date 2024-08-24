@@ -12,6 +12,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _gender = 0;
+  int _height = 100;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +37,11 @@ class _HomePageState extends State<HomePage> {
                     _gender = genderVal;
                   },
                 ),
-                Height()
+                Height(
+                  onChanged: (heightVal) {
+                    _height = heightVal;
+                  },
+                )
               ],
             ),
           ),
