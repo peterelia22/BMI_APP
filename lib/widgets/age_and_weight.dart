@@ -43,52 +43,62 @@ class _AgeAndWeightState extends State<AgeAndWeight> {
             const SizedBox(
               height: 10,
             ),
-            Row(
-              children: [
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      if (counter > widget.min) {
-                        counter--;
-                      }
-                    });
-                    widget.onChange(counter);
-                  },
-                  child: const CircleAvatar(
-                    radius: 12,
-                    backgroundColor: Colors.blue,
-                    child: Icon(
-                      Icons.remove,
-                      color: Colors.white,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        if (counter > widget.min) {
+                          counter--;
+                        }
+                      });
+                      widget.onChange(counter);
+                    },
+                    child: const CircleAvatar(
+                      radius: 12,
+                      backgroundColor: Colors.blue,
+                      child: Icon(
+                        Icons.remove,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  width: 15,
-                ),
-                Text(counter.toString()),
-                const SizedBox(
-                  width: 15,
-                ),
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      if (counter < widget.max) {
-                        counter++;
-                      }
-                    });
-                    widget.onChange(counter);
-                  },
-                  child: CircleAvatar(
-                    radius: 12,
-                    backgroundColor: Colors.blue,
-                    child: Icon(
-                      Icons.add,
-                      color: Colors.white,
+                  const SizedBox(
+                    width: 15,
+                  ),
+                  Text(
+                    counter.toString(),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black87),
+                  ),
+                  const SizedBox(
+                    width: 15,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        if (counter < widget.max) {
+                          counter++;
+                        }
+                      });
+                      widget.onChange(counter);
+                    },
+                    child: CircleAvatar(
+                      radius: 12,
+                      backgroundColor: Colors.blue,
+                      child: Icon(
+                        Icons.add,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             )
           ],
         ),

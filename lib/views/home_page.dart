@@ -1,6 +1,12 @@
+import 'dart:core';
+import 'dart:math';
+
+import 'package:bmi/views/result_page.dart';
 import 'package:bmi/widgets/age_and_weight.dart';
 import 'package:bmi/widgets/height.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:swipeable_button_view/swipeable_button_view.dart';
 
 import '../widgets/genderbox.dart';
 
@@ -16,6 +22,9 @@ class _HomePageState extends State<HomePage> {
   int _height = 100;
   int _age = 20;
   int _weight = 40;
+
+  bool _isFinished = false;
+  double _bmiScore = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,6 +33,7 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         title: Text(
           'BMI Calculator',
+          style: TextStyle(color: Colors.white),
         ),
       ),
       body: SingleChildScrollView(
@@ -46,6 +56,7 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     AgeAndWeight(
                       title: "Age",
@@ -64,8 +75,39 @@ class _HomePageState extends State<HomePage> {
                       min: 0,
                       max: 300,
                       initValue: 50,
-                    )
+                    ),
                   ],
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+                  child: SwipeableButtonView(
+                      isFinished: _isFinished,
+                      onFinish: () async {
+                        await Navigator.push(
+                            context,
+                            PageTransition(
+                                child:
+                                    ResultPage(bmiScore: _bmiScore, age: _age),
+                                type: PageTransitionType.fade));
+                        setState(() {
+                          _isFinished = false;
+                        });
+                      },
+                      onWaitingProcess: () {
+                        calculateBmi();
+                        Future.delayed(Duration(seconds: 1), () {
+                          setState(() {
+                            _isFinished = true;
+                          });
+                        });
+                      },
+                      activeColor: Colors.blue,
+                      buttonWidget: Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: Colors.black,
+                      ),
+                      buttonText: "CALCULATE"),
                 )
               ],
             ),
@@ -73,5 +115,9 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  void calculateBmi() {
+    _bmiScore = _weight / pow(_height / 100, 2);
   }
 }
