@@ -68,7 +68,7 @@ class _HomePageState extends State<HomePage> {
                       initValue: 20,
                     ),
                     AgeAndWeight(
-                      title: "Weight  (Kg)",
+                      title: "  Weight  (Kg)  ",
                       onChange: (weightVal) {
                         _weight = weightVal;
                       },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_share/flutter_share.dart';
 import 'package:pretty_gauge/pretty_gauge.dart';
 
@@ -22,6 +23,7 @@ class ResultPage extends StatelessWidget {
           "BMI Score",
           style: TextStyle(color: Colors.white),
         ),
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: Container(
         padding: const EdgeInsets.all(12),
@@ -76,10 +78,11 @@ class ResultPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text("Re-Calculate")),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text("Re-Calculate"),
+                  ),
                   SizedBox(
                     width: 10,
                   ),
@@ -92,9 +95,9 @@ class ResultPage extends StatelessWidget {
                       );
                     },
                     child: Text("Share"),
-                  )
+                  ),
                 ],
-              )
+              ),
             ],
           ),
         ),

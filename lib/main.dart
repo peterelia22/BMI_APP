@@ -1,3 +1,4 @@
+import 'package:bmi/views/splash_page.dart';
 import 'package:flutter/material.dart';
 
 import 'views/home_page.dart';
@@ -14,7 +15,7 @@ class BMICalculator extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      home: SplashPage(),
     );
   }
 }

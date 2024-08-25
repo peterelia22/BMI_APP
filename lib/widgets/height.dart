@@ -16,7 +16,7 @@ class _HeightState extends State<Height> {
       padding: const EdgeInsets.all(8),
       child: Card(
         elevation: 12,
-        shape: RoundedRectangleBorder(),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Column(
           children: [
             const Text(

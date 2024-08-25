@@ -33,7 +33,7 @@ class _AgeAndWeightState extends State<AgeAndWeight> {
       padding: EdgeInsets.all(8),
       child: Card(
         elevation: 12,
-        shape: const RoundedRectangleBorder(),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Column(
           children: [
             Text(
