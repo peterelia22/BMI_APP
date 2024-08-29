@@ -1,15 +1,35 @@
 import 'package:flutter/material.dart';
 
+import 'height_ruler.dart';
+import 'height_tittle.dart';
+
 class Height extends StatefulWidget {
+  final int height;
   final Function(int) onChanged;
-  const Height({super.key, required this.onChanged});
+  final bool isHeightSelected;
+  const Height({
+    super.key,
+    required this.onChanged,
+    required this.isHeightSelected,
+    required this.height,
+  });
 
   @override
   State<Height> createState() => _HeightState();
 }
 
 class _HeightState extends State<Height> {
-  int _height = 100;
+  int _height = 0;
+  late ScrollController _scrollController;
+  int _selectedItem = 0;
+  bool _isHeightSelected = false; // Add this flag
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -18,42 +38,33 @@ class _HeightState extends State<Height> {
         elevation: 12,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              'Height',
-              style: TextStyle(color: Colors.grey, fontSize: 25),
+            HeightTitle(
+              isHeightSelected: widget.isHeightSelected,
+              height: _height,
             ),
-            const SizedBox(
-              height: 10,
+            const SizedBox(height: 10),
+            HeightRuler(
+              scrollController: _scrollController,
+              onChanged: (height) {
+                setState(() {
+                  _selectedItem = height;
+                  _height = _selectedItem;
+                  _isHeightSelected = true;
+                });
+                widget.onChanged(_height);
+              },
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  _height.toString(),
-                  style: TextStyle(fontSize: 40),
-                ),
-                Text(
-                  'cm',
-                  style: TextStyle(fontSize: 20, color: Colors.grey),
-                )
-              ],
-            ),
-            Slider(
-                thumbColor: Colors.grey,
-                activeColor: Colors.black,
-                min: 0,
-                max: 230,
-                value: _height.toDouble(),
-                onChanged: (value) {
-                  setState(() {
-                    _height = value.toInt();
-                  });
-                  widget.onChanged(_height);
-                })
           ],
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 }

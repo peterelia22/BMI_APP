@@ -1,7 +1,13 @@
+import 'package:bmi/utils/assets.dart';
+import 'package:bmi/widgets/action_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
-import 'package:pretty_gauge/pretty_gauge.dart';
+
 import 'package:url_launcher/url_launcher.dart';
+
+import '../widgets/bmi_status.dart';
+import '../widgets/diet_advice.dart';
+import '../widgets/gauage_section.dart';
 
 class ResultPage extends StatelessWidget {
   final double bmiScore;
@@ -9,95 +15,68 @@ class ResultPage extends StatelessWidget {
   final String bmiStatus;
   final String bmiInterpretation;
   final Color bmiStatusColor;
-
+  final String dietAdvice;
+  final int gender;
+  final Color backgroundColor;
   ResultPage({
     super.key,
     required this.bmiScore,
     required this.age,
+    required this.gender,
   })  : bmiStatus = _calculateBmiStatus(bmiScore),
         bmiInterpretation = _calculateBmiInterpretation(bmiScore),
-        bmiStatusColor = _calculateBmiStatusColor(bmiScore);
+        bmiStatusColor = _calculateBmiStatusColor(bmiScore),
+        dietAdvice = _getDietAdvice(bmiScore),
+        backgroundColor = gender == 1 ? Assets.maleColor : Assets.femaleColor;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.blue,
+        backgroundColor: backgroundColor,
         centerTitle: true,
-        title: Text(
+        title: const Text(
           "BMI Score",
           style: TextStyle(color: Colors.white),
         ),
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
-        child: Card(
-          elevation: 12,
-          shape: RoundedRectangleBorder(),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Your Score",
-                style: TextStyle(color: Colors.blue, fontSize: 30),
-              ),
-              SizedBox(height: 10),
-              PrettyGauge(
-                gaugeSize: 300,
-                minValue: 0,
-                maxValue: 40,
-                segments: [
-                  GaugeSegment('Under Weight', 18.5, Colors.red),
-                  GaugeSegment('Normal', 6.4, Colors.green),
-                  GaugeSegment('Over Weight', 5, Colors.orange),
-                  GaugeSegment('Obese', 10.1, Colors.pink),
-                ],
-                valueWidget: Text(
-                  bmiScore.toStringAsFixed(1),
-                  style: TextStyle(fontSize: 50),
+        child: Container(
+          color: backgroundColor,
+          child: Card(
+            margin: const EdgeInsets.all(12),
+            elevation: 12,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GaugeSection(
+                    bmiScore: bmiScore, backgroundColor: backgroundColor),
+                const SizedBox(height: 10),
+                BmiStatusSection(
+                    bmiStatus: bmiStatus, bmiStatusColor: bmiStatusColor),
+                const SizedBox(height: 10),
+                DietAdviceSection(
+                    dietAdvice: dietAdvice, backgroundColor: backgroundColor),
+                const SizedBox(height: 30),
+                ActionButtons(
+                  onRecalculate: () => Navigator.pop(context, true),
+                  onShare: () async {
+                    await FlutterShare.share(
+                      title: 'BMI Score',
+                      text:
+                          "Your BMI Score is ${bmiScore.toStringAsFixed(1)} at Age $age. Status: $bmiStatus. Interpretation: $bmiInterpretation. Advice: $dietAdvice",
+                    );
+                  },
+                  onFeedback: _sendEmail,
+                  backgroundColor: backgroundColor,
                 ),
-                currentValue: bmiScore.toDouble(),
-                needleColor: Colors.blue,
-              ),
-              SizedBox(height: 10),
-              Text(
-                bmiStatus,
-                style: TextStyle(fontSize: 20, color: bmiStatusColor),
-              ),
-              SizedBox(height: 10),
-              Text(
-                bmiInterpretation,
-                style: TextStyle(fontSize: 15),
-              ),
-              SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text("Re-Calculate"),
-                  ),
-                  SizedBox(width: 10),
-                  ElevatedButton(
-                    onPressed: () async {
-                      await FlutterShare.share(
-                        title: 'BMI Score',
-                        text:
-                            "Your BMI Score is ${bmiScore.toStringAsFixed(1)} at Age $age. Status: $bmiStatus. Interpretation: $bmiInterpretation",
-                      );
-                    },
-                    child: Text("Share"),
-                  ),
-                ],
-              ),
-              SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: _sendEmail,
-                child: Text("Feedback"),
-              ),
-            ],
+                const SizedBox(height: 30),
+              ],
+            ),
           ),
         ),
       ),
@@ -137,6 +116,18 @@ class ResultPage extends StatelessWidget {
       return Colors.green;
     } else {
       return Colors.red;
+    }
+  }
+
+  static String _getDietAdvice(double bmiScore) {
+    if (bmiScore > 30) {
+      return "Consider a low-calorie, balanced diet with plenty of vegetables and lean proteins.";
+    } else if (bmiScore >= 25) {
+      return "Incorporate more fiber and lean proteins into your diet and reduce high-calorie foods.";
+    } else if (bmiScore >= 18.5) {
+      return "Maintain a balanced diet with a mix of protein, carbohydrates, and healthy fats.";
+    } else {
+      return "Focus on a nutrient-rich diet to help reach a healthy weight.";
     }
   }
 

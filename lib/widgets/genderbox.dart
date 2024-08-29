@@ -4,8 +4,14 @@ import 'package:flutter_3d_choice_chip/flutter_3d_choice_chip.dart';
 import '../utils/assets.dart';
 
 class Gender extends StatefulWidget {
-  final Function onChanged;
-  const Gender({super.key, required this.onChanged});
+  final Function(int) onChanged;
+  final bool isGenderSelected; // New parameter to track selection status
+
+  const Gender({
+    super.key,
+    required this.onChanged,
+    required this.isGenderSelected,
+  });
 
   @override
   State<Gender> createState() => _GenderState();
@@ -13,29 +19,35 @@ class Gender extends StatefulWidget {
 
 class _GenderState extends State<Gender> {
   int _gender = 0;
-  final ChoiceChip3DStyle selectedStyle = ChoiceChip3DStyle(
-      topColor: Colors.grey[200]!,
-      backColor: Colors.grey,
-      borderRadius: BorderRadius.circular(20));
-  final ChoiceChip3DStyle unSelectedStyle = ChoiceChip3DStyle(
-      topColor: Colors.white,
-      backColor: Colors.grey[300]!,
-      borderRadius: BorderRadius.circular(20));
+
   @override
   Widget build(BuildContext context) {
+    bool isGenderSelected = widget.isGenderSelected;
+
+    Color chipColor =
+        !isGenderSelected && _gender == 0 ? Colors.red : Colors.white;
+    Color borderColor =
+        !isGenderSelected && _gender == 0 ? Colors.red : Colors.grey;
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ChoiceChip3D(
-            border: Border.all(color: Colors.grey),
-            style: _gender == 1 ? selectedStyle : unSelectedStyle,
+            border: Border.all(color: borderColor),
+            style: ChoiceChip3DStyle(
+              topColor: Colors.white,
+              backColor: !isGenderSelected && _gender == 0
+                  ? chipColor
+                  : Assets.maleColor,
+              borderRadius: BorderRadius.circular(20),
+            ),
             onSelected: () {
               setState(() {
                 _gender = 1;
+                widget.onChanged(_gender);
               });
-              widget.onChanged(_gender);
             },
             onUnSelected: () {},
             selected: _gender == 1,
@@ -48,26 +60,31 @@ class _GenderState extends State<Gender> {
                     width: 50,
                   ),
                 ),
-                const SizedBox(
-                  height: 8,
-                ),
+                const SizedBox(height: 8),
                 const Text(
                   'Male',
+                  style: TextStyle(
+                    color: Assets.maleColor,
+                  ),
                 ),
               ],
             ),
           ),
-          const SizedBox(
-            width: 15,
-          ),
+          const SizedBox(width: 15),
           ChoiceChip3D(
-            border: Border.all(color: Colors.grey),
-            style: _gender == 2 ? selectedStyle : unSelectedStyle,
+            border: Border.all(color: borderColor),
+            style: ChoiceChip3DStyle(
+              topColor: Colors.white,
+              backColor: !isGenderSelected && _gender == 0
+                  ? chipColor
+                  : Assets.femaleColor,
+              borderRadius: BorderRadius.circular(20),
+            ),
             onSelected: () {
               setState(() {
                 _gender = 2;
+                widget.onChanged(_gender);
               });
-              widget.onChanged(_gender);
             },
             onUnSelected: () {},
             selected: _gender == 2,
@@ -80,15 +97,16 @@ class _GenderState extends State<Gender> {
                     width: 50,
                   ),
                 ),
-                const SizedBox(
-                  height: 8,
-                ),
+                const SizedBox(height: 8),
                 const Text(
                   'Female',
-                )
+                  style: TextStyle(
+                    color: Assets.femaleColor,
+                  ),
+                ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );

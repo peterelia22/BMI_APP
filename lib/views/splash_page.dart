@@ -1,6 +1,6 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
+
 import 'package:bmi/views/home_page.dart';
 import 'package:bmi/utils/assets.dart';
 
@@ -13,12 +13,12 @@ class SplashPage extends StatelessWidget {
       splashTransition: SplashTransition.rotationTransition,
       duration: 40,
       splashIconSize: 200,
-      backgroundColor: Colors.blue,
+      backgroundColor: Assets.pColor,
       splash: const CircleAvatar(
         radius: 100,
         backgroundImage: AssetImage(Assets.assetsImagesBmi),
       ),
-      nextScreen: HomePage(),
+      nextScreen: const HomePage(),
     );
   }
 }
