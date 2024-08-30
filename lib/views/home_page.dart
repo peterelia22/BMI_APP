@@ -81,7 +81,7 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Flexible(
                       child: AgeSelector(
-                        age: _age,
+                        age: _age ?? 0,
                         onChanged: (newValue) {
                           setState(() {
                             _age = newValue;
@@ -90,6 +90,9 @@ class _HomePageState extends State<HomePage> {
                         },
                         isAgeSelected: _isAgeSelected,
                       ),
+                    ),
+                    const SizedBox(
+                      width: 40,
                     ),
                     Flexible(
                       child: WeightSelector(

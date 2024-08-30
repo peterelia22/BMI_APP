@@ -1,14 +1,14 @@
-import 'package:bmi/utils/assets.dart';
 import 'package:flutter/material.dart';
+import '../utils/assets.dart';
 
 class AgeSelector extends StatefulWidget {
-  final int? age;
+  final int age;
   final Function(int?) onChanged;
   final bool isAgeSelected;
 
   const AgeSelector({
     super.key,
-    this.age,
+    required this.age,
     required this.onChanged,
     required this.isAgeSelected,
   });
@@ -18,6 +18,20 @@ class AgeSelector extends StatefulWidget {
 }
 
 class _AgeSelectorState extends State<AgeSelector> {
+  void _incrementAge() {
+    setState(() {
+      widget.onChanged(widget.age + 1);
+    });
+  }
+
+  void _decrementAge() {
+    setState(() {
+      if (widget.age > 0) {
+        widget.onChanged(widget.age - 1);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -31,19 +45,44 @@ class _AgeSelectorState extends State<AgeSelector> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        Slider(
-          value: widget.age?.toDouble() ?? 0.0,
-          min: 0,
-          max: 120,
-          divisions: 120,
-          activeColor: widget.isAgeSelected ? Assets.pColor : Colors.red,
-          label: "${widget.age ?? 0} Years",
-          onChanged: (double newValue) {
-            widget.onChanged(newValue.toInt());
-          },
+        Row(
+          children: [
+            Expanded(
+              flex: 1,
+              child: IconButton(
+                padding: EdgeInsets.zero,
+                onPressed: _decrementAge,
+                icon: Icon(Icons.remove),
+                color: widget.isAgeSelected ? Assets.pColor : Colors.red,
+              ),
+            ),
+            Expanded(
+              flex: 9,
+              child: Slider(
+                value: widget.age.toDouble(),
+                min: 0,
+                max: 120,
+                divisions: 120,
+                activeColor: widget.isAgeSelected ? Assets.pColor : Colors.red,
+                label: "${widget.age} Years",
+                onChanged: (double newValue) {
+                  widget.onChanged(newValue.toInt());
+                },
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: IconButton(
+                padding: EdgeInsets.zero,
+                onPressed: _incrementAge,
+                icon: Icon(Icons.add),
+                color: widget.isAgeSelected ? Assets.pColor : Colors.red,
+              ),
+            ),
+          ],
         ),
         Text(
-          '${widget.age ?? 0} Years',
+          '${widget.age} Years',
           style: TextStyle(
             color: widget.isAgeSelected ? Assets.pColor : Colors.red,
             fontSize: 16,
